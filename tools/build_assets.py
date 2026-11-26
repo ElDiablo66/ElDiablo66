@@ -145,7 +145,8 @@ palms = (
     + palm(1098, H + 6, 276, -40, 1.3, rnd) + palm(1004, H + 6, 176, 24, 0.92, rnd) + palm(1180, H + 6, 140, -12, 0.78, rnd)
 )
 
-TS, TY = 176, 216  # title size and baseline
+TS = min(176, 800 / LETTERS["title"]["w"] * 1000)  # title size, shrunk to fit long names
+TY = 155 + 0.344 * TS  # baseline that keeps the title centred on the same line
 tk = TS / 1000
 title_x = 600 - width("title", TS) / 2 - 8
 title = (
@@ -162,7 +163,7 @@ ribbon = (
 )
 
 banner = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-labelledby="t d">
-<title id="t">El Diablo</title>
+<title id="t">Anonymous</title>
 <desc id="d">Developer and avatar architect. Systems, networking, Blender and Unity. Move in silence. Let the work speak. The lettering sits over a sunset skyline with palm trees and water.</desc>
 <defs>
   <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -332,6 +333,88 @@ div = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 24" width="1
 </svg>
 """
 save("divider.svg", div)
+
+# ---------- profile picture ----------
+# Square, 1024 px. GitHub crops it to a circle, so everything that matters stays inside one.
+AV, AHZ = 1024, 650
+ar = random.Random(59)
+a_stars = "".join(
+    f'<circle cx="{ar.uniform(120, 900):.0f}" cy="{ar.uniform(90, 330):.0f}" r="{ar.choice((2, 2.6, 3.2))}" fill="#fff" opacity="{ar.uniform(0.4, 0.9):.2f}"/>'
+    for _ in range(26)
+)
+a_clouds = "".join(
+    f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="{col}" opacity="{op}"/>'
+    for cx, cy, rx, ry, col, op in (
+        (300, 330, 330, 16, "#ff8fb8", 0.3), (760, 400, 360, 15, "#b05ad6", 0.3), (480, 470, 420, 13, "#ffb089", 0.34),
+        (620, 560, 460, 11, "#ffd08a", 0.36), (380, 612, 320, 9, "#ffe2a6", 0.34),
+    )
+)
+a_city, x = "", 60
+while x < 964:
+    w = ar.randint(34, 78)
+    f = min(1, max(0, (abs(x + w / 2 - 512) - 150) / 250))
+    h = 18 + 120 * f * ar.uniform(0.5, 1)
+    a_city += f'<rect x="{x}" y="{AHZ - h:.0f}" width="{w}" height="{h + 2:.0f}"/>'
+    x += w
+a_reflect = "".join(
+    f'<rect x="{512 - wd / 2 + ar.uniform(-14, 14):.0f}" y="{AHZ + 16 + i * 22}" width="{wd:.0f}" height="7" rx="3.5" '
+    f'fill="{GOLD if i < 3 else ORANGE}" opacity="{0.85 - i * 0.09:.2f}"/>'
+    for i, wd in enumerate(max(40, 430 - i * 52 + ar.uniform(-40, 40)) for i in range(8))
+)
+MS = 470
+mk = MS / 1000
+mx = 512 - width("mono", MS) / 2 - 14
+mono = (
+    word("mono", MS, mx + 14, 636, skew=-9, attrs=f'fill="{INK}" opacity="0.75"')
+    + word("mono", MS, mx, 620, skew=-9, attrs=f'fill="none" stroke="{PINK}" stroke-opacity="0.4" stroke-width="{52 / mk:.0f}" stroke-linejoin="round"')
+    + word("mono", MS, mx, 620, skew=-9, attrs=f'fill="url(#tfill)" stroke="{INK}" stroke-width="{26 / mk:.0f}" stroke-linejoin="round" paint-order="stroke"')
+)
+avatar = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {AV} {AV}" width="{AV}" height="{AV}" role="img" aria-label="Letter A over a sunset skyline with palm trees">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="{NIGHT}"/><stop offset="0.3" stop-color="#43186c"/><stop offset="0.52" stop-color="#a52c7c"/>
+    <stop offset="0.72" stop-color="#f25a66"/><stop offset="1" stop-color="#ffb061"/>
+  </linearGradient>
+  <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff4bd"/><stop offset="0.55" stop-color="{GOLD}"/><stop offset="1" stop-color="#ff6f61"/>
+  </linearGradient>
+  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#ffd08a" stop-opacity="0.75"/><stop offset="1" stop-color="#ffd08a" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#5a1d6e"/><stop offset="0.35" stop-color="#2c1055"/><stop offset="1" stop-color="#10062a"/>
+  </linearGradient>
+  <linearGradient id="tfill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fffbe6"/><stop offset="0.42" stop-color="#ffe08a"/><stop offset="0.72" stop-color="#ff9a5c"/><stop offset="1" stop-color="#ff4f9a"/>
+  </linearGradient>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="4"/>
+    <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 -0.2"/>
+  </filter>
+  <clipPath id="above"><rect width="{AV}" height="{AHZ}"/></clipPath>
+</defs>
+<rect width="{AV}" height="{AV}" fill="url(#sky)"/>
+{a_stars}
+<g clip-path="url(#above)">
+  <circle cx="512" cy="{AHZ}" r="620" fill="url(#halo)"/>
+  <circle cx="512" cy="{AHZ - 20}" r="300" fill="url(#sun)"/>
+  {a_clouds}
+  <g fill="#241047">{a_city}</g>
+</g>
+<rect y="{AHZ}" width="{AV}" height="{AV - AHZ}" fill="url(#sea)"/>
+<rect y="{AHZ - 2}" width="{AV}" height="4" fill="#ffd9a0" opacity="0.7"/>
+{a_reflect}
+{palm(196, 900, 470, 44, 2.1, ar)}
+{palm(836, 900, 500, -52, 2.2, ar)}
+{mono}
+<rect width="{AV}" height="{AV}" filter="url(#grain)" opacity="0.13"/>
+</svg>
+"""
+extra = os.path.join(HERE, "..", "preview")
+os.makedirs(extra, exist_ok=True)
+with open(os.path.join(extra, "avatar.svg"), "w", encoding="utf-8", newline="\n") as f:
+    f.write(avatar)
+print("ok preview/avatar.svg")
 
 for old in ("card-avatars.svg", "card-systems.svg", "card-tools.svg"):
     p = os.path.join(out, old)

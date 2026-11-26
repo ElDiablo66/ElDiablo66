@@ -1,9 +1,9 @@
 <div align="center">
-  <img src="assets/banner.svg" width="100%" alt="El Diablo. Developer and avatar architect. Move in silence. Let the work speak. Sunset skyline with palm trees over water.">
+  <img src="assets/banner.svg" width="100%" alt="Anonymous. Developer and avatar architect. Move in silence. Let the work speak. Sunset skyline with palm trees over water.">
 </div>
 
 <p align="center">
-  I'm El Diablo, a developer and avatar architect.<br>
+  I'm a developer and avatar architect.<br>
   I work on systems and networking, and I build avatars in Blender and Unity.
 </p>
 

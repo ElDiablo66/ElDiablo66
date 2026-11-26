@@ -19,7 +19,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # key: (text, weight, width, extra spacing in font units)
 WORDS = {
-    "title": ("EL DIABLO", 900, 84, 14),
+    "title": ("ANONYMOUS", 900, 84, 14),
+    "mono": ("A", 900, 84, 0),
     "role": ("DEVELOPER & AVATAR ARCHITECT", 700, 100, 120),
     "tags": ("SYSTEMS  /  NETWORKING  /  BLENDER  /  UNITY", 600, 100, 150),
     "motto": ("Move in silence. Let the work speak.", 500, 100, 30),
